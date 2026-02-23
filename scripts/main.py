@@ -64,12 +64,14 @@ def create_arc_sectors_svg(width, height, data,
 
 
 def main():
-    width, height = 400, 400
-    radius = 150
+    size = 1500
+    width, height = size, size
+    radius = int(width * 0.35)
     data = [10] * 20
     colors_red_green = ['#680c09', '#032d16'] * 10
     colors_black_white = ['#e6ede9', '#0e0f0e'] * 10
-    sectors_ratios = [0.95, 0.85, 0.6, 0.5, 0.4, 0.1, 0.0]
+    sectors_ratios = [0.95, 0.95, 0.45, 0.45,
+                      0.4, 0.4, 0.1, 0.1, 0.05, 0.05, 0.01]
 
     first_sector_args = {
         'width': width,
@@ -107,6 +109,26 @@ def main():
         'inner_radius': radius * sectors_ratios[6]
     }
 
+    bull_eye_outer = {
+        'width': width,
+        'height': height,
+        # 'data': data[:1],
+        'data': data,
+        'colors': colors_red_green[1:],
+        'outer_radius': radius * sectors_ratios[7],
+        'inner_radius': radius * sectors_ratios[8]
+    }
+
+    bull_eye_inner = {
+        'width': width,
+        'height': height,
+        # 'data': data[:1],
+        'data': data,
+        'colors': colors_red_green[:1],
+        'outer_radius': radius * sectors_ratios[9],
+        'inner_radius': radius * sectors_ratios[10]
+    }
+
     arcs_svg = wrap_with_svg_tag([
         create_arc_sectors_svg(
             **first_sector_args
@@ -119,6 +141,12 @@ def main():
         ),
         create_arc_sectors_svg(
             **fourth_sector_args
+        ),
+        create_arc_sectors_svg(
+            **bull_eye_outer
+        ),
+        create_arc_sectors_svg(
+            **bull_eye_inner
         ),
     ],
         **first_sector_args
