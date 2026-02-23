@@ -1,7 +1,7 @@
 import math
 
 
-def wrap_with_svg_tag(content, args**):
+def wrap_with_svg_tag(svg_elements, **args):
     width, height = args['width'], args['height']
     svg_content = f'''<svg width="{width}" height="{height}" viewBox="0 0 {width} {height}" xmlns="http://www.w3.org/2000/svg">
 {chr(10).join(svg_elements)}
@@ -10,8 +10,7 @@ def wrap_with_svg_tag(content, args**):
 
 
 def create_arc_sectors_svg(width, height, data,
-                           colors,
-                           outer_radius=150, inner_radius=80):
+                           colors, outer_radius, inner_radius):
     """
     Creates SVG with standalone arc sectors (not filled to center).
 
@@ -65,13 +64,64 @@ def create_arc_sectors_svg(width, height, data,
 
 
 def main():
-    width, height
-    outer_radius = 150
-    inner_radius = 80
+    width, height = 400, 400
+    radius = 150
+    data = [10] * 20
+    colors_red_green = ['#680c09', '#032d16'] * 10
+    colors_black_white = ['#e6ede9', '#0e0f0e'] * 10
+    sectors_ratios = [0.95, 0.85, 0.6, 0.5, 0.4, 0.1, 0.0]
 
-    arcs_svg = create_arc_sectors_svg(
-        data=[10] * 20,
-        colors=['#FF6B6B', '#4ECDC4'] * 10
+    first_sector_args = {
+        'width': width,
+        'height': height,
+        'data': data,
+        'colors': colors_red_green,
+        'outer_radius': radius,
+        'inner_radius': radius * sectors_ratios[0]
+    }
+
+    second_sector_args = {
+        'width': width,
+        'height': height,
+        'data': data,
+        'colors': colors_black_white,
+        'outer_radius': radius * sectors_ratios[1],
+        'inner_radius': radius * sectors_ratios[2]
+    }
+
+    third_sector_args = {
+        'width': width,
+        'height': height,
+        'data': data,
+        'colors': colors_red_green,
+        'outer_radius': radius * sectors_ratios[3],
+        'inner_radius': radius * sectors_ratios[4]
+    }
+
+    fourth_sector_args = {
+        'width': width,
+        'height': height,
+        'data': data,
+        'colors': colors_black_white,
+        'outer_radius': radius * sectors_ratios[5],
+        'inner_radius': radius * sectors_ratios[6]
+    }
+
+    arcs_svg = wrap_with_svg_tag([
+        create_arc_sectors_svg(
+            **first_sector_args
+        ),
+        create_arc_sectors_svg(
+            **second_sector_args
+        ),
+        create_arc_sectors_svg(
+            **third_sector_args
+        ),
+        create_arc_sectors_svg(
+            **fourth_sector_args
+        ),
+    ],
+        **first_sector_args
     )
 
     with open("board.svg", "w") as f:
