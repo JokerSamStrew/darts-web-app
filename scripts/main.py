@@ -78,23 +78,45 @@ def create_arc_sectors_svg(width, height, data, colors, outer_radius, inner_radi
     return "".join(svg_elements)  # Return all paths as a single string
 
 
+def create_circle_text(radius=100, center_x=150, center_y=150, text="Python Text Around Circle"):
+    # Generate circular path (full circle)
+    path_d = f"M {center_x}, {center_y - radius} A {radius}, {radius} 0 1,0 {center_x}, {center_y +
+                                                                                         radius} A {radius}, {radius} 0 1,0 {center_x}, {center_y - radius}"
+
+    svg = f'''<svg width="300" height="300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <path id="circlePath" d="{path_d}" fill="none"/>
+  </defs>
+  <circle cx="{center_x}" cy="{center_y}" r="{radius}" fill="lightblue" stroke="blue"/>
+  <text font-size="16" fill="darkblue">
+    <textPath href="#circlePath" startOffset="0%">
+      {text}
+    </textPath>
+  </text>
+</svg>'''
+    return svg
+
+
 def generate_board_svg_str():
     size = 1500
     width, height = size, size
-    radius = int(width * 0.35)
+    radius = int(width * 0.45)
     data = [10] * 20
     colors_red_green = ['#680c09', '#032d16'] * 10
     colors_black_white = ['#e6ede9', '#0e0f0e'] * 10
-    sectors_ratios = [0.95, 0.95, 0.45, 0.45,
-                      0.4, 0.4, 0.1, 0.1, 0.05, 0.05, 0.0]
+    sectors_ratios = list(map(lambda x: x / 451, [170 * 2, 170 * 2, 162 * 2, 162 * 2, 107 * 2, 107 * 2,
+                                                  99 * 2, 99 * 2, 32, 32, 12.7, 12.7, 0.0]))
+
+    # sectors_ratios = [0.95, 0.95, 0.85, 0.85, 0.45, 0.45,
+    #                   0.4, 0.4, 0.1, 0.1, 0.05, 0.05, 0.0]
 
     background_sector_args = {
         'width': width,
         'height': height,
         'data': data[:1],
         'colors': colors_black_white[1:],
-        'outer_radius': radius * 1.2,
-        'inner_radius': radius
+        'outer_radius': radius,
+        'inner_radius': radius * sectors_ratios[0]
     }
 
     first_sector_args = {
@@ -102,8 +124,8 @@ def generate_board_svg_str():
         'height': height,
         'data': data,
         'colors': colors_red_green,
-        'outer_radius': radius,
-        'inner_radius': radius * sectors_ratios[0]
+        'outer_radius': radius * sectors_ratios[1],
+        'inner_radius': radius * sectors_ratios[2]
     }
 
     second_sector_args = {
@@ -111,8 +133,8 @@ def generate_board_svg_str():
         'height': height,
         'data': data,
         'colors': colors_black_white,
-        'outer_radius': radius * sectors_ratios[1],
-        'inner_radius': radius * sectors_ratios[2]
+        'outer_radius': radius * sectors_ratios[3],
+        'inner_radius': radius * sectors_ratios[4]
     }
 
     third_sector_args = {
@@ -120,8 +142,8 @@ def generate_board_svg_str():
         'height': height,
         'data': data,
         'colors': colors_red_green,
-        'outer_radius': radius * sectors_ratios[3],
-        'inner_radius': radius * sectors_ratios[4]
+        'outer_radius': radius * sectors_ratios[5],
+        'inner_radius': radius * sectors_ratios[6]
     }
 
     fourth_sector_args = {
@@ -129,8 +151,8 @@ def generate_board_svg_str():
         'height': height,
         'data': data,
         'colors': colors_black_white,
-        'outer_radius': radius * sectors_ratios[5],
-        'inner_radius': radius * sectors_ratios[6]
+        'outer_radius': radius * sectors_ratios[7],
+        'inner_radius': radius * sectors_ratios[8]
     }
 
     bull_eye_outer = {
@@ -139,8 +161,8 @@ def generate_board_svg_str():
         'data': data[:1],
         # 'data': data,
         'colors': colors_red_green[1:],
-        'outer_radius': radius * sectors_ratios[7],
-        'inner_radius': radius * sectors_ratios[8]
+        'outer_radius': radius * sectors_ratios[9],
+        'inner_radius': radius * sectors_ratios[10]
     }
 
     bull_eye_inner = {
@@ -149,8 +171,8 @@ def generate_board_svg_str():
         'data': data[:1],
         # 'data': data,
         'colors': colors_red_green[:1],
-        'outer_radius': radius * sectors_ratios[9],
-        'inner_radius': radius * sectors_ratios[10]
+        'outer_radius': radius * sectors_ratios[11],
+        'inner_radius': radius * sectors_ratios[12]
     }
 
     arcs_svg = wrap_with_svg_tag([
@@ -183,24 +205,28 @@ def generate_board_svg_str():
 
 
 def test_cases():
-    arcs_svg = wrap_with_svg_tag([
-        # Full solid circle
-        # create_arc_sectors_svg(200, 200, [100], ['red'], 80, 0),
+    # arcs_svg = wrap_with_svg_tag([
+    # Full solid circle
+    # create_arc_sectors_svg(200, 200, [100], ['red'], 80, 0),
 
-        # Full ring (single data item)
-        # create_arc_sectors_svg(200, 200, [100], ['blue'], 80, 30),
+    # Full ring (single data item)
+    # create_arc_sectors_svg(200, 200, [100], ['blue'], 80, 30),
 
-        # Multiple sectors (original behavior)
-        # create_arc_sectors_svg(200, 200, [30, 30, 40], ['red', 'green', 'blue'], 80, 30)
-    ], width=200, height=200)
+    # Multiple sectors (original behavior)
+    # create_arc_sectors_svg(200, 200, [30, 30, 40], ['red', 'green', 'blue'], 80, 30)
+    # ], width=200, height=200)
+
+    arcs_svg = create_circle_text()
 
     with open("board.svg", "w") as f:
         f.write(arcs_svg)
 
 
 def main():
-    with open("board.svg", "w") as f:
-        f.write(generate_board_svg_str())
+    # with open("board.svg", "w") as f:
+    #     f.write(generate_board_svg_str())
+
+    test_cases()
 
 
 if __name__ == "__main__":
