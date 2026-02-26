@@ -8,7 +8,7 @@ def wrap_with_svg_tag(svg_elements, width, height):
     return svg_content
 
 
-def create_arc_sectors_svg(center_x, center_y, data, colors, outer_radius, inner_radius):
+def create_arc_sectors_svg(center_x, center_y, data, colors, outer_radius, inner_radius, start_angle):
     """
     Creates SVG with standalone arc sectors. Fixes solid circle case.
     """
@@ -19,7 +19,6 @@ def create_arc_sectors_svg(center_x, center_y, data, colors, outer_radius, inner
         total = 1
 
     svg_elements = []
-    start_angle = -math.pi / 2
 
     # SPECIAL CASE: Single data item + inner_radius > 0 = full ring
     if len(data) == 1:
@@ -76,14 +75,13 @@ def create_arc_sectors_svg(center_x, center_y, data, colors, outer_radius, inner
     return "".join(svg_elements)  # Return all paths as a single string
 
 
-def svg_text_labels(radius, data, center_x, center_y, font_size, colors=None):
+def svg_text_labels(radius, data, center_x, center_y, font_size, start_angle, colors=None):
     if colors is None:
         colors = ['#4e79a7', '#f28e2b', '#59a14f', '#76b7b2', '#e15759', '#b07aa2']
 
     total = len(data)
     svg_parts = []
 
-    start_angle = -90
     label_radius = radius
 
     for i, value in enumerate(data):
@@ -127,13 +125,17 @@ def generate_board_svg_str():
                                                   99 * 2, 99 * 2, 32, 32, 12.7, 12.7, 0.0]))
     board_labels_data = [20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5]
 
+    start_angle = -90 - 9
+    start_angle_pi = -math.pi / 2 + (math.pi / 2) / 10
+
     text_labels_args = {
-        'radius': radius * 0.9,
+        'radius': radius * ((sectors_ratios[0] + 1) / 2),
         'data': board_labels_data,
         'colors': None,
         'center_x': center_x,
         'center_y': center_y,
-        'font_size': font_size
+        'font_size': font_size,
+        'start_angle': start_angle
     }
 
     background_sector_args = {
@@ -142,7 +144,8 @@ def generate_board_svg_str():
         'data': data[:1],
         'colors': colors_black_white[1:],
         'outer_radius': radius,
-        'inner_radius': radius * sectors_ratios[0]
+        'inner_radius': radius * sectors_ratios[0],
+        'start_angle': start_angle_pi
     }
 
     first_sector_args = {
@@ -151,7 +154,9 @@ def generate_board_svg_str():
         'data': data,
         'colors': colors_red_green,
         'outer_radius': radius * sectors_ratios[1],
-        'inner_radius': radius * sectors_ratios[2]
+        'inner_radius': radius * sectors_ratios[2],
+        'start_angle': start_angle_pi
+
     }
 
     second_sector_args = {
@@ -160,7 +165,9 @@ def generate_board_svg_str():
         'data': data,
         'colors': colors_black_white,
         'outer_radius': radius * sectors_ratios[3],
-        'inner_radius': radius * sectors_ratios[4]
+        'inner_radius': radius * sectors_ratios[4],
+        'start_angle': start_angle_pi
+
     }
 
     third_sector_args = {
@@ -169,7 +176,9 @@ def generate_board_svg_str():
         'data': data,
         'colors': colors_red_green,
         'outer_radius': radius * sectors_ratios[5],
-        'inner_radius': radius * sectors_ratios[6]
+        'inner_radius': radius * sectors_ratios[6],
+        'start_angle': start_angle_pi
+
     }
 
     fourth_sector_args = {
@@ -178,7 +187,9 @@ def generate_board_svg_str():
         'data': data,
         'colors': colors_black_white,
         'outer_radius': radius * sectors_ratios[7],
-        'inner_radius': radius * sectors_ratios[8]
+        'inner_radius': radius * sectors_ratios[8],
+        'start_angle': start_angle_pi
+
     }
 
     bull_eye_outer = {
@@ -188,7 +199,9 @@ def generate_board_svg_str():
         # 'data': data,
         'colors': colors_red_green[1:],
         'outer_radius': radius * sectors_ratios[9],
-        'inner_radius': radius * sectors_ratios[10]
+        'inner_radius': radius * sectors_ratios[10],
+        'start_angle': start_angle_pi
+
     }
 
     bull_eye_inner = {
@@ -198,7 +211,9 @@ def generate_board_svg_str():
         # 'data': data,
         'colors': colors_red_green[:1],
         'outer_radius': radius * sectors_ratios[11],
-        'inner_radius': radius * sectors_ratios[12]
+        'inner_radius': radius * sectors_ratios[12],
+        'start_angle': start_angle_pi
+
     }
 
     arcs_svg = wrap_with_svg_tag([
