@@ -83,8 +83,8 @@ def svg_text_labels(radius, data, center_x, center_y, font_size, colors=None):
     total = len(data)
     svg_parts = []
 
-    start_angle = 175  # Start from top
-    label_radius = radius * 0.7  # Label position inside slices
+    start_angle = -90
+    label_radius = radius
 
     for i, value in enumerate(data):
         angle = 360 / total
@@ -92,16 +92,24 @@ def svg_text_labels(radius, data, center_x, center_y, font_size, colors=None):
 
         # Midpoint angle for label position
         mid_angle = start_angle + (angle / 2)
-        mid_rad = math.radians(mid_angle + 90)
+        mid_rad = math.radians(mid_angle)
         label_x = center_x + label_radius * math.cos(mid_rad)
         label_y = center_y + label_radius * math.sin(mid_rad)
 
         svg_parts.append(f'<text x="{label_x}" y="{label_y}" '
-                         f'text-anchor="middle" font-size="{font_size}" '
+                         f'text-anchor="middle" font-size="{font_size}" dominant-baseline="middle" '
                          f'font-weight="bold" fill="white" stroke="black" stroke-width="0.5">'
                          f'{value}</text>')
+        #
+        # svg_parts.append(
+        #     f'<circle cx="{label_x}" cy="{label_y}" r="{5}" fill="#ffffff"/>'
+        # )
 
         start_angle = end_angle
+
+    # svg_parts.append(
+    #     f'<circle cx="{center_x}" cy="{center_y}" r="{5}" fill="#ffffff"/>'
+    # )
 
     return '\n'.join(svg_parts)
 
@@ -120,7 +128,7 @@ def generate_board_svg_str():
     board_labels_data = [20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5]
 
     text_labels_args = {
-        'radius': radius * 1.2,
+        'radius': radius * 0.9,
         'data': board_labels_data,
         'colors': None,
         'center_x': center_x,
