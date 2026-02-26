@@ -1,19 +1,17 @@
 import math
 
 
-def wrap_with_svg_tag(svg_elements, **args):
-    width, height = args['width'], args['height']
+def wrap_with_svg_tag(svg_elements, width, height):
     svg_content = f'''<svg width="{width}" height="{height}" viewBox="0 0 {width} {height}" xmlns="http://www.w3.org/2000/svg">
 {chr(10).join(svg_elements)}
 </svg>'''
     return svg_content
 
 
-def create_arc_sectors_svg(width, height, data, colors, outer_radius, inner_radius):
+def create_arc_sectors_svg(center_x, center_y, data, colors, outer_radius, inner_radius):
     """
     Creates SVG with standalone arc sectors. Fixes solid circle case.
     """
-    center_x, center_y = width // 2, height // 2
     total = sum(data)
 
     # Prevent division by zero if data is empty
@@ -78,41 +76,61 @@ def create_arc_sectors_svg(width, height, data, colors, outer_radius, inner_radi
     return "".join(svg_elements)  # Return all paths as a single string
 
 
-def create_circle_text(radius=100, center_x=150, center_y=150, text="Python Text Around Circle"):
-    # Generate circular path (full circle)
-    path_d = f"M {center_x}, {center_y - radius} A {radius}, {radius} 0 1,0 {center_x}, {center_y +
-                                                                                         radius} A {radius}, {radius} 0 1,0 {center_x}, {center_y - radius}"
+def svg_text_labels(radius, data, center_x, center_y, font_size, colors=None):
+    if colors is None:
+        colors = ['#4e79a7', '#f28e2b', '#59a14f', '#76b7b2', '#e15759', '#b07aa2']
 
-    svg = f'''<svg width="300" height="300" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <path id="circlePath" d="{path_d}" fill="none"/>
-  </defs>
-  <circle cx="{center_x}" cy="{center_y}" r="{radius}" fill="lightblue" stroke="blue"/>
-  <text font-size="16" fill="darkblue">
-    <textPath href="#circlePath" startOffset="0%">
-      {text}
-    </textPath>
-  </text>
-</svg>'''
-    return svg
+    total = len(data)
+    svg_parts = []
+
+    start_angle = 175  # Start from top
+    label_radius = radius * 0.7  # Label position inside slices
+
+    for i, value in enumerate(data):
+        angle = 360 / total
+        end_angle = start_angle + angle
+
+        # Midpoint angle for label position
+        mid_angle = start_angle + (angle / 2)
+        mid_rad = math.radians(mid_angle + 90)
+        label_x = center_x + label_radius * math.cos(mid_rad)
+        label_y = center_y + label_radius * math.sin(mid_rad)
+
+        svg_parts.append(f'<text x="{label_x}" y="{label_y}" '
+                         f'text-anchor="middle" font-size="{font_size}" '
+                         f'font-weight="bold" fill="white" stroke="black" stroke-width="0.5">'
+                         f'{value}</text>')
+
+        start_angle = end_angle
+
+    return '\n'.join(svg_parts)
 
 
 def generate_board_svg_str():
     size = 1500
     width, height = size, size
+    center_x, center_y = width // 2, height // 2
     radius = int(width * 0.45)
+    font_size = radius / 7
     data = [10] * 20
     colors_red_green = ['#680c09', '#032d16'] * 10
     colors_black_white = ['#e6ede9', '#0e0f0e'] * 10
     sectors_ratios = list(map(lambda x: x / 451, [170 * 2, 170 * 2, 162 * 2, 162 * 2, 107 * 2, 107 * 2,
                                                   99 * 2, 99 * 2, 32, 32, 12.7, 12.7, 0.0]))
+    board_labels_data = [20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5]
 
-    # sectors_ratios = [0.95, 0.95, 0.85, 0.85, 0.45, 0.45,
-    #                   0.4, 0.4, 0.1, 0.1, 0.05, 0.05, 0.0]
+    text_labels_args = {
+        'radius': radius * 1.2,
+        'data': board_labels_data,
+        'colors': None,
+        'center_x': center_x,
+        'center_y': center_y,
+        'font_size': font_size
+    }
 
     background_sector_args = {
-        'width': width,
-        'height': height,
+        'center_x': center_x,
+        'center_y': center_y,
         'data': data[:1],
         'colors': colors_black_white[1:],
         'outer_radius': radius,
@@ -120,8 +138,8 @@ def generate_board_svg_str():
     }
 
     first_sector_args = {
-        'width': width,
-        'height': height,
+        'center_x': center_x,
+        'center_y': center_y,
         'data': data,
         'colors': colors_red_green,
         'outer_radius': radius * sectors_ratios[1],
@@ -129,8 +147,8 @@ def generate_board_svg_str():
     }
 
     second_sector_args = {
-        'width': width,
-        'height': height,
+        'center_x': center_x,
+        'center_y': center_y,
         'data': data,
         'colors': colors_black_white,
         'outer_radius': radius * sectors_ratios[3],
@@ -138,8 +156,8 @@ def generate_board_svg_str():
     }
 
     third_sector_args = {
-        'width': width,
-        'height': height,
+        'center_x': center_x,
+        'center_y': center_y,
         'data': data,
         'colors': colors_red_green,
         'outer_radius': radius * sectors_ratios[5],
@@ -147,8 +165,8 @@ def generate_board_svg_str():
     }
 
     fourth_sector_args = {
-        'width': width,
-        'height': height,
+        'center_x': center_x,
+        'center_y': center_y,
         'data': data,
         'colors': colors_black_white,
         'outer_radius': radius * sectors_ratios[7],
@@ -156,8 +174,8 @@ def generate_board_svg_str():
     }
 
     bull_eye_outer = {
-        'width': width,
-        'height': height,
+        'center_x': center_x,
+        'center_y': center_y,
         'data': data[:1],
         # 'data': data,
         'colors': colors_red_green[1:],
@@ -166,8 +184,8 @@ def generate_board_svg_str():
     }
 
     bull_eye_inner = {
-        'width': width,
-        'height': height,
+        'center_x': center_x,
+        'center_y': center_y,
         'data': data[:1],
         # 'data': data,
         'colors': colors_red_green[:1],
@@ -197,8 +215,11 @@ def generate_board_svg_str():
         create_arc_sectors_svg(
             **bull_eye_inner
         ),
+        svg_text_labels(
+            **text_labels_args
+        )
     ],
-        **first_sector_args
+        width, height
     )
 
     return arcs_svg
@@ -216,17 +237,17 @@ def test_cases():
     # create_arc_sectors_svg(200, 200, [30, 30, 40], ['red', 'green', 'blue'], 80, 30)
     # ], width=200, height=200)
 
-    arcs_svg = create_circle_text()
+    arcs_svg = svg_text_labels(radius=80, data=[20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5])
 
     with open("board.svg", "w") as f:
         f.write(arcs_svg)
 
 
 def main():
-    # with open("board.svg", "w") as f:
-    #     f.write(generate_board_svg_str())
+    with open("board.svg", "w") as f:
+        f.write(generate_board_svg_str())
 
-    test_cases()
+    # test_cases()
 
 
 if __name__ == "__main__":
