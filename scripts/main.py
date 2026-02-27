@@ -119,14 +119,16 @@ def generate_board_svg_str():
     radius = int(width * 0.45)
     font_size = radius / 7
     data = [10] * 20
-    colors_red_green = ['#680c09', '#032d16'] * 10
-    colors_black_white = ['#e6ede9', '#0e0f0e'] * 10
+
+    colors_red_green = ['#a40200', '#067d43'] * 10
+    colors_white_black = ['#f0e5c7', '#0f0e0c'] * 10
     sectors_ratios = list(map(lambda x: x / 451, [170 * 2, 170 * 2, 162 * 2, 162 * 2, 107 * 2, 107 * 2,
                                                   99 * 2, 99 * 2, 32, 32, 12.7, 12.7, 0.0]))
     board_labels_data = [20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5]
 
     start_angle = -90 - 9
-    start_angle_pi = -math.pi / 2 + (math.pi / 2) / 10
+    # start_angle_pi = -math.pi / 2 + (math.pi / 2) / 10
+    start_angle_pi = (math.pi / 2) * (-1 + 1 / 10)
 
     text_labels_args = {
         'radius': radius * ((sectors_ratios[0] + 1) / 2),
@@ -142,7 +144,7 @@ def generate_board_svg_str():
         'center_x': center_x,
         'center_y': center_y,
         'data': data[:1],
-        'colors': colors_black_white[1:],
+        'colors': colors_white_black[1:],
         'outer_radius': radius,
         'inner_radius': radius * sectors_ratios[0],
         'start_angle': start_angle_pi
@@ -163,7 +165,7 @@ def generate_board_svg_str():
         'center_x': center_x,
         'center_y': center_y,
         'data': data,
-        'colors': colors_black_white,
+        'colors': colors_white_black,
         'outer_radius': radius * sectors_ratios[3],
         'inner_radius': radius * sectors_ratios[4],
         'start_angle': start_angle_pi
@@ -185,7 +187,7 @@ def generate_board_svg_str():
         'center_x': center_x,
         'center_y': center_y,
         'data': data,
-        'colors': colors_black_white,
+        'colors': colors_white_black,
         'outer_radius': radius * sectors_ratios[7],
         'inner_radius': radius * sectors_ratios[8],
         'start_angle': start_angle_pi
