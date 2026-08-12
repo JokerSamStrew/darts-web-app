@@ -8,7 +8,7 @@ def wrap_with_svg_tag(svg_elements, width, height):
     return svg_content
 
 
-def create_arc_sectors_svg(id_prefix, center_x, center_y, data, colors, outer_radius, inner_radius, start_angle):
+def create_arc_sectors_svg(id_prefix, labels_data, center_x, center_y, data, colors, outer_radius, inner_radius, start_angle):
     """
     Creates SVG with standalone arc sectors. Fixes solid circle case.
     """
@@ -69,7 +69,7 @@ def create_arc_sectors_svg(id_prefix, center_x, center_y, data, colors, outer_ra
                 f"Z"
             )
 
-        svg_elements.append(f'<path id="{id_prefix}{value}" d="{path_data}" fill="{color}" stroke="#333" stroke-width="1"/>')
+        svg_elements.append(f'<path id="{id_prefix}{labels_data[i]}" d="{path_data}" fill="{color}" stroke="#333" stroke-width="1"/>')
         start_angle = end_angle  # Update start angle for next segment
 
     return "".join(svg_elements)  # Return all paths as a single string
@@ -145,6 +145,7 @@ def generate_board_svg_str():
         'center_x': center_x,
         'center_y': center_y,
         'data': data[:1],
+        'labels_data': board_labels_data,
         'colors': colors_white_black[1:],
         'outer_radius': radius,
         'inner_radius': radius * sectors_ratios[0],
@@ -156,6 +157,7 @@ def generate_board_svg_str():
         'center_x': center_x,
         'center_y': center_y,
         'data': data,
+        'labels_data': board_labels_data,
         'colors': colors_red_green,
         'outer_radius': radius * sectors_ratios[1],
         'inner_radius': radius * sectors_ratios[2],
@@ -168,6 +170,7 @@ def generate_board_svg_str():
         'center_x': center_x,
         'center_y': center_y,
         'data': data,
+        'labels_data': board_labels_data,
         'colors': colors_white_black,
         'outer_radius': radius * sectors_ratios[3],
         'inner_radius': radius * sectors_ratios[4],
@@ -180,6 +183,7 @@ def generate_board_svg_str():
         'center_x': center_x,
         'center_y': center_y,
         'data': data,
+        'labels_data': board_labels_data,
         'colors': colors_red_green,
         'outer_radius': radius * sectors_ratios[5],
         'inner_radius': radius * sectors_ratios[6],
@@ -192,6 +196,7 @@ def generate_board_svg_str():
         'center_x': center_x,
         'center_y': center_y,
         'data': data,
+        'labels_data': board_labels_data,
         'colors': colors_white_black,
         'outer_radius': radius * sectors_ratios[7],
         'inner_radius': radius * sectors_ratios[8],
@@ -204,7 +209,7 @@ def generate_board_svg_str():
         'center_x': center_x,
         'center_y': center_y,
         'data': data[:1],
-        # 'data': data,
+        'labels_data': board_labels_data,
         'colors': colors_red_green[1:],
         'outer_radius': radius * sectors_ratios[9],
         'inner_radius': radius * sectors_ratios[10],
@@ -217,7 +222,7 @@ def generate_board_svg_str():
         'center_x': center_x,
         'center_y': center_y,
         'data': data[:1],
-        # 'data': data,
+        'labels_data': board_labels_data,
         'colors': colors_red_green[:1],
         'outer_radius': radius * sectors_ratios[11],
         'inner_radius': radius * sectors_ratios[12],
