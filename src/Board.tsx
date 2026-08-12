@@ -11,19 +11,43 @@ import React, { useState, useRef } from "react";
 export const Board = React.forwardRef(({ }, ref) => {
     const [is_spinning, setIsSpinning] = useState(false);
 
-    const svgWrapRef = useRef(null);
+    const svg_ref = useRef(null);
     React.useImperativeHandle(
         ref,
         () => ({
-            toggleSpin: () => setIsSpinning(prev => !prev)
+            toggleSpin: () => setIsSpinning(prev => !prev),
+            getIds: () => {
+                const root = svg_ref.current;
+                const allWithId = Array.from(root.querySelectorAll("[id]")).map(el => (el.id));
+                return allWithId;
+            },
+            setColor: (selector, color) => {
+                const root = svg_ref.current;
+                if (!root) return;
+
+                const el = root.querySelector(selector); // e.g. '#myId' or '[data-x="1"]'
+                if (!el) return;
+
+                if (el.hasAttribute("fill")) el.setAttribute("fill", color);
+                if (el.hasAttribute("stroke")) el.setAttribute("stroke", color);
+
+                const style = el.getAttribute("style");
+                if (style) {
+                    el.setAttribute(
+                        "style",
+                        style
+                            .replace(/fill\s*:\s*[^;]+;?/g, `fill:${color};`)
+                            .replace(/stroke\s*:\s*[^;]+;?/g, `stroke:${color};`)
+                    );
+                }
+            },
         }),
         []
     );
 
     return (
         <svg
-            onClick={() => setIsSpinning(prev => !prev)}
-            ref={svgWrapRef}
+            ref={svg_ref}
             className={is_spinning ? "react logo spin" : "react logo"}
             width="1500"
             height="1500"
