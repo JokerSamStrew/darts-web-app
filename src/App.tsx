@@ -1,14 +1,16 @@
-import { useState } from "react";
-import board from "./assets/board.svg"
+import { useState, useRef } from "react";
+import { Board } from "./Board.tsx"
 import "./App.css";
 
+
+
 function App() {
-    const [count, setCount] = useState(0);
+    const board_ref = useRef(null);
 
     return (
         <>
-            <div>
-                <img src={board} className="logo react logo-spin" alt="board" />
+            <div >
+                <Board ref={board_ref} />
             </div>
         </>
     );

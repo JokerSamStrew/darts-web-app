@@ -8,7 +8,7 @@ def wrap_with_svg_tag(svg_elements, width, height):
     return svg_content
 
 
-def create_arc_sectors_svg(center_x, center_y, data, colors, outer_radius, inner_radius, start_angle):
+def create_arc_sectors_svg(id_prefix, center_x, center_y, data, colors, outer_radius, inner_radius, start_angle):
     """
     Creates SVG with standalone arc sectors. Fixes solid circle case.
     """
@@ -69,13 +69,13 @@ def create_arc_sectors_svg(center_x, center_y, data, colors, outer_radius, inner
                 f"Z"
             )
 
-        svg_elements.append(f'<path d="{path_data}" fill="{color}" stroke="#333" stroke-width="1"/>')
+        svg_elements.append(f'<path id="{id_prefix}{value}" d="{path_data}" fill="{color}" stroke="#333" stroke-width="1"/>')
         start_angle = end_angle  # Update start angle for next segment
 
     return "".join(svg_elements)  # Return all paths as a single string
 
 
-def svg_text_labels(radius, data, center_x, center_y, font_size, start_angle, colors=None):
+def svg_text_labels(id_prefix, radius, data, center_x, center_y, font_size, start_angle, colors=None):
     if colors is None:
         colors = ['#4e79a7', '#f28e2b', '#59a14f', '#76b7b2', '#e15759', '#b07aa2']
 
@@ -94,7 +94,7 @@ def svg_text_labels(radius, data, center_x, center_y, font_size, start_angle, co
         label_x = center_x + label_radius * math.cos(mid_rad)
         label_y = center_y + label_radius * math.sin(mid_rad)
 
-        svg_parts.append(f'<text x="{label_x}" y="{label_y}" '
+        svg_parts.append(f'<text id="{id_prefix}{value}" x="{label_x}" y="{label_y}" '
                          f'text-anchor="middle" font-size="{font_size}" dominant-baseline="middle" '
                          f'font-weight="bold" fill="white" stroke="black" stroke-width="0.5">'
                          f'{value}</text>')
@@ -131,6 +131,7 @@ def generate_board_svg_str():
     start_angle_pi = (math.pi / 2) * (-1 + 1 / 10)
 
     text_labels_args = {
+        'id_prefix': 'txt_lbl_',
         'radius': radius * ((sectors_ratios[0] + 1) / 2),
         'data': board_labels_data,
         'colors': None,
@@ -141,6 +142,7 @@ def generate_board_svg_str():
     }
 
     background_sector_args = {
+        'id_prefix': 'bg_sct_',
         'center_x': center_x,
         'center_y': center_y,
         'data': data[:1],
@@ -151,6 +153,7 @@ def generate_board_svg_str():
     }
 
     first_sector_args = {
+        'id_prefix': 'fr_sct_',
         'center_x': center_x,
         'center_y': center_y,
         'data': data,
@@ -162,6 +165,7 @@ def generate_board_svg_str():
     }
 
     second_sector_args = {
+        'id_prefix': 'sc_sct_',
         'center_x': center_x,
         'center_y': center_y,
         'data': data,
@@ -173,6 +177,7 @@ def generate_board_svg_str():
     }
 
     third_sector_args = {
+        'id_prefix': 'thr_sct_',
         'center_x': center_x,
         'center_y': center_y,
         'data': data,
@@ -184,6 +189,7 @@ def generate_board_svg_str():
     }
 
     fourth_sector_args = {
+        'id_prefix': 'fth_sct_',
         'center_x': center_x,
         'center_y': center_y,
         'data': data,
@@ -195,6 +201,7 @@ def generate_board_svg_str():
     }
 
     bull_eye_outer = {
+        'id_prefix': 'beo_sct_',
         'center_x': center_x,
         'center_y': center_y,
         'data': data[:1],
@@ -207,6 +214,7 @@ def generate_board_svg_str():
     }
 
     bull_eye_inner = {
+        'id_prefix': 'bei_sct_',
         'center_x': center_x,
         'center_y': center_y,
         'data': data[:1],

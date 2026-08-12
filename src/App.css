@@ -18,19 +18,18 @@
   filter: drop-shadow(0 0 2em #067d43);
 }
 
-@keyframes logo-spin {
+@keyframes spin {
   from {
     transform: rotate(0deg);
   }
   to {
-    transform: rotate(180deg);
+    transform: rotate(360deg);
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.spin {
+  animation: spin 10s linear infinite;
+  transform-origin: center;
 }
 
 .card {
