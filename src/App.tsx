@@ -16,6 +16,7 @@ function App() {
                 if (board_ref.current) {
                     board_ref.current.toggleSpin();
                     const result_id = randomFromArray(board_ref.current.getIds());
+                    console.log(result_id);
                     board_ref.current.setColor("#" + result_id, "orange");
                 }
             }}>

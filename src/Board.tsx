@@ -15,10 +15,12 @@ export const Board = React.forwardRef(({ }, ref) => {
     React.useImperativeHandle(
         ref,
         () => ({
-            toggleSpin: () => setIsSpinning(prev => !prev),
+            toggleSpin: () => setIsSpinning((prev) => !prev),
             getIds: () => {
                 const root = svg_ref.current;
-                const allWithId = Array.from(root.querySelectorAll("[id]")).map(el => (el.id));
+                const allWithId = Array.from(root.querySelectorAll("[id]")).map(
+                    (el) => el.id,
+                );
                 return allWithId;
             },
             setColor: (selector, color) => {
@@ -37,12 +39,12 @@ export const Board = React.forwardRef(({ }, ref) => {
                         "style",
                         style
                             .replace(/fill\s*:\s*[^;]+;?/g, `fill:${color};`)
-                            .replace(/stroke\s*:\s*[^;]+;?/g, `stroke:${color};`)
+                            .replace(/stroke\s*:\s*[^;]+;?/g, `stroke:${color};`),
                     );
                 }
             },
         }),
-        []
+        [],
     );
 
     return (
@@ -620,7 +622,6 @@ export const Board = React.forwardRef(({ }, ref) => {
             <circle cx="750" cy="750" r="19.007760532150773" fill="#ffffff" />
             <circle cx="750" cy="750" r="19.007760532150773" fill="#a40200" />
             <text
-                id="txt_lbl_20"
                 x="750.0"
                 y="158.06541019955648"
                 text-anchor="middle"
@@ -634,7 +635,6 @@ export const Board = React.forwardRef(({ }, ref) => {
                 20
             </text>
             <text
-                id="txt_lbl_1"
                 x="932.9178478067005"
                 y="187.03675114978944"
                 text-anchor="middle"
@@ -648,7 +648,6 @@ export const Board = React.forwardRef(({ }, ref) => {
                 1
             </text>
             <text
-                id="txt_lbl_18"
                 x="1097.9304222064952"
                 y="271.11485729307776"
                 text-anchor="middle"
@@ -662,7 +661,6 @@ export const Board = React.forwardRef(({ }, ref) => {
                 18
             </text>
             <text
-                id="txt_lbl_4"
                 x="1228.8851427069221"
                 y="402.0695777935047"
                 text-anchor="middle"
@@ -676,7 +674,6 @@ export const Board = React.forwardRef(({ }, ref) => {
                 4
             </text>
             <text
-                id="txt_lbl_13"
                 x="1312.9632488502107"
                 y="567.0821521932995"
                 text-anchor="middle"
@@ -690,7 +687,6 @@ export const Board = React.forwardRef(({ }, ref) => {
                 13
             </text>
             <text
-                id="txt_lbl_6"
                 x="1341.9345898004435"
                 y="750.0"
                 text-anchor="middle"
@@ -704,7 +700,6 @@ export const Board = React.forwardRef(({ }, ref) => {
                 6
             </text>
             <text
-                id="txt_lbl_10"
                 x="1312.9632488502107"
                 y="932.9178478067005"
                 text-anchor="middle"
@@ -718,7 +713,6 @@ export const Board = React.forwardRef(({ }, ref) => {
                 10
             </text>
             <text
-                id="txt_lbl_15"
                 x="1228.8851427069221"
                 y="1097.9304222064952"
                 text-anchor="middle"
@@ -732,7 +726,6 @@ export const Board = React.forwardRef(({ }, ref) => {
                 15
             </text>
             <text
-                id="txt_lbl_2"
                 x="1097.9304222064952"
                 y="1228.8851427069221"
                 text-anchor="middle"
@@ -746,7 +739,6 @@ export const Board = React.forwardRef(({ }, ref) => {
                 2
             </text>
             <text
-                id="txt_lbl_17"
                 x="932.9178478067005"
                 y="1312.9632488502107"
                 text-anchor="middle"
@@ -760,7 +752,6 @@ export const Board = React.forwardRef(({ }, ref) => {
                 17
             </text>
             <text
-                id="txt_lbl_3"
                 x="750.0"
                 y="1341.9345898004435"
                 text-anchor="middle"
@@ -774,7 +765,6 @@ export const Board = React.forwardRef(({ }, ref) => {
                 3
             </text>
             <text
-                id="txt_lbl_19"
                 x="567.0821521932996"
                 y="1312.9632488502107"
                 text-anchor="middle"
@@ -788,7 +778,6 @@ export const Board = React.forwardRef(({ }, ref) => {
                 19
             </text>
             <text
-                id="txt_lbl_7"
                 x="402.0695777935048"
                 y="1228.8851427069221"
                 text-anchor="middle"
@@ -802,7 +791,6 @@ export const Board = React.forwardRef(({ }, ref) => {
                 7
             </text>
             <text
-                id="txt_lbl_16"
                 x="271.1148572930778"
                 y="1097.9304222064952"
                 text-anchor="middle"
@@ -816,7 +804,6 @@ export const Board = React.forwardRef(({ }, ref) => {
                 16
             </text>
             <text
-                id="txt_lbl_8"
                 x="187.03675114978944"
                 y="932.9178478067005"
                 text-anchor="middle"
@@ -830,7 +817,6 @@ export const Board = React.forwardRef(({ }, ref) => {
                 8
             </text>
             <text
-                id="txt_lbl_11"
                 x="158.06541019955648"
                 y="750.0000000000001"
                 text-anchor="middle"
@@ -844,7 +830,6 @@ export const Board = React.forwardRef(({ }, ref) => {
                 11
             </text>
             <text
-                id="txt_lbl_14"
                 x="187.03675114978944"
                 y="567.0821521932996"
                 text-anchor="middle"
@@ -858,7 +843,6 @@ export const Board = React.forwardRef(({ }, ref) => {
                 14
             </text>
             <text
-                id="txt_lbl_9"
                 x="271.11485729307776"
                 y="402.0695777935048"
                 text-anchor="middle"
@@ -872,7 +856,6 @@ export const Board = React.forwardRef(({ }, ref) => {
                 9
             </text>
             <text
-                id="txt_lbl_12"
                 x="402.06957779350466"
                 y="271.1148572930778"
                 text-anchor="middle"
@@ -886,7 +869,6 @@ export const Board = React.forwardRef(({ }, ref) => {
                 12
             </text>
             <text
-                id="txt_lbl_5"
                 x="567.0821521932994"
                 y="187.03675114978944"
                 text-anchor="middle"
