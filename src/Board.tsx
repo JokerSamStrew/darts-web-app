@@ -10,8 +10,9 @@ import React, { useState, useRef } from "react";
 
 export const Board = React.forwardRef(({ }, ref) => {
     const [is_spinning, setIsSpinning] = useState(false);
-
     const svg_ref = useRef(null);
+    const color_state = useRef({});
+
     React.useImperativeHandle(
         ref,
         () => ({
@@ -23,24 +24,32 @@ export const Board = React.forwardRef(({ }, ref) => {
                 );
                 return allWithId;
             },
-            setColor: (selector, color) => {
+            dropColors: () => {
+                for (const [_, value] of Object.entries(color_state.current)) {
+                    for (const p of value) {
+                        p.el.setAttribute(p.attr, p.val);
+                    }
+                }
+                color_state.current = {};
+            },
+            setColor: (selector: string, color: string) => {
                 const root = svg_ref.current;
                 if (!root) return;
 
                 const el = root.querySelector(selector); // e.g. '#myId' or '[data-x="1"]'
                 if (!el) return;
 
-                if (el.hasAttribute("fill")) el.setAttribute("fill", color);
-                if (el.hasAttribute("stroke")) el.setAttribute("stroke", color);
-
-                const style = el.getAttribute("style");
-                if (style) {
-                    el.setAttribute(
-                        "style",
-                        style
-                            .replace(/fill\s*:\s*[^;]+;?/g, `fill:${color};`)
-                            .replace(/stroke\s*:\s*[^;]+;?/g, `stroke:${color};`),
-                    );
+                if (color_state.current[selector] === undefined) {
+                    color_state.current[selector] = [
+                        { el: el, attr: "stroke", val: el.getAttribute("stroke") },
+                        { el: el, attr: "fill", val: el.getAttribute("fill") },
+                    ];
+                }
+                if (el.hasAttribute("fill")) {
+                    el.setAttribute("fill", color);
+                }
+                if (el.hasAttribute("stroke")) {
+                    el.setAttribute("stroke", color);
                 }
             },
         }),

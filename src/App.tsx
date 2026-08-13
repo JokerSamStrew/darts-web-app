@@ -15,9 +15,12 @@ function App() {
             <div onClick={() => {
                 if (board_ref.current) {
                     board_ref.current.toggleSpin();
-                    const result_id = randomFromArray(board_ref.current.getIds());
-                    console.log(result_id);
-                    board_ref.current.setColor("#" + result_id, "orange");
+                    board_ref.current.dropColors();
+                    setTimeout(() => {
+                        const result_id = randomFromArray(board_ref.current.getIds());
+                        board_ref.current.setColor("#" + result_id, "orange");
+                        board_ref.current.toggleSpin();
+                    }, 5000);
                 }
             }}>
                 <Board ref={board_ref} />
