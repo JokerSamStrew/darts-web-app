@@ -7,8 +7,23 @@ function randomFromArray(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
 }
 
+let tId;
+
+function debounce(fn, ms) {
+    return (...args) => {
+        clearTimeout(tId);
+        tId = setTimeout(() => fn(...args), ms);
+    };
+}
+
 function App() {
     const board_ref = useRef(null);
+
+    const debounceColorRandomSector = debounce(() => {
+        const result_id = randomFromArray(board_ref.current.getIds());
+        board_ref.current.setColor("#" + result_id, "orange");
+        board_ref.current.toggleSpin();
+    }, 5000);
 
     return (
         <>
@@ -18,11 +33,7 @@ function App() {
                     // board_ref.current.setColor("#" + result_id, "orange");
                     board_ref.current.toggleSpin();
                     board_ref.current.dropColors();
-                    setTimeout(() => {
-                        const result_id = randomFromArray(board_ref.current.getIds());
-                        board_ref.current.setColor("#" + result_id, "orange");
-                        board_ref.current.toggleSpin();
-                    }, 5000);
+                    debounceColorRandomSector();
                 }
             }}>
                 <Board ref={board_ref} />
