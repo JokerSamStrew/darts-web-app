@@ -23,14 +23,25 @@ def create_arc_sectors_svg(id_prefix, labels_data, center_x, center_y, data, col
     # SPECIAL CASE: Single data item + inner_radius > 0 = full ring
     if len(data) == 1:
         if inner_radius > 0:
-            path_data = (
-                f'<circle cx="{center_x}" cy="{center_y}" r="{outer_radius}" fill="{colors[0]}"/>'
-                f'<circle cx="{center_x}" cy="{center_y}" r="{inner_radius}" fill="#ffffff"/>'
-            )
+            if id_prefix is not None:
+                path_data = (
+                    f'<circle id="{id_prefix}" cx="{center_x}" cy="{center_y}" r="{outer_radius}" fill="{colors[0]}"/>'
+                    # f'<circle cx="{center_x}" cy="{center_y}" r="{inner_radius}" fill="#ffffff"/>'
+                )
+            else:
+                path_data = (
+                    f'<circle cx="{center_x}" cy="{center_y}" r="{outer_radius}" fill="{colors[0]}"/>'
+                    # f'<circle cx="{center_x}" cy="{center_y}" r="{inner_radius}" fill="#ffffff"/>'
+                )
         else:
-            path_data = (
-                f'<circle cx="{center_x}" cy="{center_y}" r="{outer_radius}" fill="{colors[0]}"/>'
-            )
+            if id_prefix is not None:
+                path_data = (
+                    f'<circle id="{id_prefix}" cx="{center_x}" cy="{center_y}" r="{outer_radius}" fill="{colors[0]}"/>'
+                )
+            else:
+                path_data = (
+                    f'<circle cx="{center_x}" cy="{center_y}" r="{outer_radius}" fill="{colors[0]}"/>'
+                )
 
         return path_data
 
@@ -141,7 +152,8 @@ def generate_board_svg_str():
     }
 
     background_sector_args = {
-        'id_prefix': 'bg_sct_',
+        # 'id_prefix': 'bg_sct_',
+        'id_prefix': None,
         'center_x': center_x,
         'center_y': center_y,
         'data': data[:1],
