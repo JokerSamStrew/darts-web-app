@@ -1,9 +1,26 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, forwardRef } from "react";
 
-export const Board = React.forwardRef(({ }, ref) => {
+type BoardProps = {
+};
+
+type ColorState = {
+    [key: string]: {
+        el: Element;
+        attr: string;
+        val: string;
+    }[];
+};
+
+type Handle = {
+};
+
+export const Board = forwardRef<BoardProps, Handle>((
+    { },
+    ref
+) => {
     const [is_spinning, setIsSpinning] = useState(false);
-    const svg_ref = useRef(null);
-    const color_state = useRef({});
+    const svg_ref = useRef<SVGSVGElement>(null);
+    const color_state = useRef<ColorState>({});
 
     React.useImperativeHandle(
         ref,
@@ -11,6 +28,8 @@ export const Board = React.forwardRef(({ }, ref) => {
             toggleSpin: () => setIsSpinning((prev) => !prev),
             getIds: () => {
                 const root = svg_ref.current;
+                if (!root) return [];
+
                 const allWithId = Array.from(root.querySelectorAll("[id]")).map(
                     (el) => el.id,
                 );
@@ -33,8 +52,8 @@ export const Board = React.forwardRef(({ }, ref) => {
 
                 if (color_state.current[selector] === undefined) {
                     color_state.current[selector] = [
-                        { el: el, attr: "stroke", val: el.getAttribute("stroke") },
-                        { el: el, attr: "fill", val: el.getAttribute("fill") },
+                        { el: el, attr: "stroke", val: el.getAttribute("stroke") || '' },
+                        { el: el, attr: "fill", val: el.getAttribute("fill") || '' },
                     ];
                 }
                 if (el.hasAttribute("fill")) {
@@ -57,9 +76,7 @@ export const Board = React.forwardRef(({ }, ref) => {
             viewBox="0 0 1500 1500"
             xmlns="http://www.w3.org/2000/svg"
         >
-            <style>
-                {'text { font-family: "Arial" }'}
-            </style>
+            <style>{'text { font-family: "Arial" }'}</style>
             <g className="board">
                 <circle cx="750" cy="750" r="675" fill="#0f0e0c" />
                 <path
